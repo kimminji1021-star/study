@@ -1,0 +1,87 @@
+/* Pretendard. CDN 이 막힌 환경에서는 아래 fallback 스택으로 자연스럽게 떨어진다.
+   tailwindcss 는 인라인 전개되므로 이 @import 가 먼저 와야 한다. */
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+@import "tailwindcss";
+
+/*
+ * 시안(JD기업교육 랜딩페이지.dc.html)의 팔레트.
+ * 다크 단일 테마이므로 prefers-color-scheme 분기를 두지 않는다.
+ */
+@theme {
+  --color-ink-900: #0c0b0f; /* footer */
+  --color-ink-850: #0f0e12; /* page bg, input bg */
+  --color-ink-800: #121116; /* 교차 섹션 bg */
+  --color-ink-750: #15141a; /* card */
+  --color-ink-700: #17161c; /* modal */
+  --color-ink-650: #1b1922; /* 선택된 행 */
+
+  --color-line-900: #1f1d26;
+  --color-line-800: #24222c;
+  --color-line-700: #2b2833;
+  --color-line-600: #34303e;
+  --color-line-500: #38343f;
+
+  --color-fg: #f4f2f7;
+  --color-fg-strong: #e4e1ea;
+  --color-fg-muted: #c7c2d4;
+  --color-fg-dim: #a9a4b5;
+  --color-fg-faint: #8f8aa0;
+  --color-fg-ghost: #7c7690;
+  --color-fg-disabled: #6f6a7c;
+  --color-fg-quiet: #55505f;
+
+  --color-brand: #6b4e9e;
+  --color-brand-hover: #7d5db5;
+  --color-brand-line: #4a3a6b;
+  --color-brand-soft: #c6b0f0;
+  --color-brand-light: #b69be8;
+  --color-brand-pale: #d3c2f5;
+
+  --color-danger: #e5695c;
+  --color-danger-fg: #f29288;
+  --color-danger-line: #6b322c;
+
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui,
+    "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+@keyframes fadeup {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@utility animate-fadeup {
+  animation: fadeup 0.6s ease both;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-ink-850);
+  color: var(--color-fg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 다크 배경에서 네이티브 드롭다운 목록이 흰 바탕으로 뜨는 것을 막는다. */
+select option {
+  background: var(--color-ink-850);
+  color: var(--color-fg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-fadeup {
+    animation: none;
+  }
+}

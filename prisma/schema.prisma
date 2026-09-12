@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// PRD 6.4 상담 상태값
+enum ConsultationStatus {
+  NEW
+  IN_PROGRESS
+  NO_ANSWER
+  DONE
+  CONVERTED
+  HOLD
+  CLOSED
+}
+
+/// 상담 희망 시간대
+enum PreferredTime {
+  ANY
+  MORNING
+  AFTERNOON
+  EVENING
+}
+
+enum DeviceType {
+  PC
+  MOBILE
+}
+
+model ConsultationRequest {
+  id String @id @default(uuid()) @db.Uuid
+
+  /// 접수번호(C-YYMMDD-NNN) 표시용 일련번호. 화면에서 createdAt 과 조합해 만든다.
+  seq Int @unique @default(autoincrement())
+
+  name          String
+  phone         String
+  course        String
+  preferredTime PreferredTime @default(ANY) @map("preferred_time")
+  message       String?
+
+  /// PI-2: 필수 동의와 마케팅 수신 동의를 분리해 각각 보관한다.
+  agreePrivacy   Boolean @default(true) @map("agree_privacy")
+  agreeMarketing Boolean @default(false) @map("agree_marketing")
+
+  status    ConsultationStatus @default(NEW)
+  adminMemo String?            @map("admin_memo")
+
+  utmSource   String?     @map("utm_source")
+  utmMedium   String?     @map("utm_medium")
+  utmCampaign String?     @map("utm_campaign")
+  referrer    String?
+  deviceType  DeviceType? @map("device_type")
+
+  /// F-A-17: 물리 삭제 대신 논리 삭제
+  isDeleted Boolean  @default(false) @map("is_deleted")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  histories ConsultationHistory[]
+
+  @@index([status, createdAt(sort: Desc)])
+  @@index([createdAt(sort: Desc)])
+  /// F-F-05 중복 신청 차단 조회용
+  @@index([phone, createdAt(sort: Desc)])
+  @@map("consultation_requests")
+}
+
+/// F-A-14 / F-A-16: 상태 변경 이력
+model ConsultationHistory {
+  id             String              @id @default(uuid()) @db.Uuid
+  consultationId String              @map("consultation_id") @db.Uuid
+  prevStatus     ConsultationStatus? @map("prev_status")
+  nextStatus     ConsultationStatus  @map("next_status")
+  changedBy      String              @map("changed_by")
+  changedAt      DateTime            @default(now()) @map("changed_at") @db.Timestamptz(6)
+
+  consultation ConsultationRequest @relation(fields: [consultationId], references: [id], onDelete: Cascade)
+
+  @@index([consultationId, changedAt])
+  @@map("consultation_history")
+}
+
+/// auth.users 와 1:1. 이메일이 여기 있어야 /admin 접근이 허용된다.
+model AdminUser {
+  id        String   @id @db.Uuid
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@map("admin_users")
+}
