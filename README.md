@@ -58,6 +58,15 @@ pnpm dev
 | `src/lib/supabase/session.ts` | 세션 갱신 + `/admin` 접근 차단 (`src/proxy.ts` 에서 호출) |
 | `prisma/schema.prisma` | `consultation_requests`, `consultation_history`, `admin_users` |
 
+## 이미지 자산
+
+인물 사진은 **초상권 때문에 저장소에 포함하지 않습니다.** Hero 우측 대표 강사 사진은 이렇게 넣습니다.
+
+1. 1200×1500 WebP로 만들어 `public/` 에 둔다 (`/public/instructor-lead.*` 는 `.gitignore` 처리돼 있습니다)
+2. `.env` 에 경로를 지정한다 — `NEXT_PUBLIC_HERO_IMAGE="/instructor-lead.webp"`
+
+지정하지 않으면 Hero 우측은 원래의 플레이스홀더 박스로 렌더됩니다. 실제 배포 전에는 사용 동의를 받은 사진으로 교체하고, 캡션(`HERO.instructor`)도 실제 강사 정보로 바꿔야 합니다.
+
 ## 상담 상태값 (PRD 6.4)
 
 `NEW(접수) → IN_PROGRESS(연락중) → NO_ANSWER(부재중) / DONE(상담완료) → CONVERTED(등록) / HOLD(보류) / CLOSED(종료)`

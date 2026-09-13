@@ -43,3 +43,7 @@ next-env.d.ts
 
 # prisma generated client
 /src/generated
+
+# 초상권·라이선스가 확정되지 않은 인물 사진은 저장소에 넣지 않는다.
+# 로컬에서는 .env 의 NEXT_PUBLIC_HERO_IMAGE 로 경로를 지정해 쓴다.
+/public/instructor-lead.*

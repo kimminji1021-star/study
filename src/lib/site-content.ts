@@ -45,6 +45,16 @@ export const HERO = {
   bodyTail:
     '은 현직자 강사가 자기 업무를 그대로 가져와 가르칩니다. AI 도구 사용법이 아니라, 지금 맡고 있는 일에 맞춰 쓰는 방법을 8주 동안 함께 만듭니다.',
   meta: ['온라인 실시간 · 주 2회 저녁', '8주 과정', '국비 지원 가능', '상담 후 등록'],
+  /**
+   * Hero 우측 대표 강사 사진.
+   * 인물 사진은 초상권 때문에 저장소에 넣지 않는다. public/ 에 파일을 두고
+   * .env 의 NEXT_PUBLIC_HERO_IMAGE 로 경로를 주면 그때만 렌더한다. 없으면 플레이스홀더.
+   */
+  instructor: {
+    image: process.env.NEXT_PUBLIC_HERO_IMAGE || null,
+    name: '강OO 강사',
+    role: 'AI 업무 활용 · 메인 강사',
+  },
   stats: [
     { value: '1,840명', label: '누적 수료생' },
     { value: '91%', label: '8주 수료율' },

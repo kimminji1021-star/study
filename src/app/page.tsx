@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import { SiteHeader } from '@/components/landing/site-header'
 import { FaqList } from '@/components/landing/faq-list'
 import { ApplySection } from '@/components/landing/apply-section'
@@ -68,15 +69,38 @@ export default function Home() {
             </div>
 
             <div className="animate-fadeup">
-              <div className="flex min-h-[320px] items-end border border-line-700 p-[22px] [aspect-ratio:4/5] [background:repeating-linear-gradient(135deg,#1A181F_0_10px,#15141A_10px_20px)]">
-                <p className="font-mono text-xs leading-relaxed text-fg-ghost">
-                  [ 이미지 ]
-                  <br />
-                  강의 현장 또는 대표 강사 촬영컷
-                  <br />
-                  권장 1200×1500 · WebP
-                </p>
-              </div>
+              {HERO.instructor.image ? (
+                <figure className="relative min-h-[320px] border border-line-700 [aspect-ratio:4/5]">
+                  <Image
+                    src={HERO.instructor.image}
+                    alt={`${HERO.instructor.name} ${HERO.instructor.role}`}
+                    fill
+                    // Hero 이미지가 LCP 요소다. 우선 로드하고 뷰포트별 크기를 좁게 잡는다. (NF-01)
+                    priority
+                    sizes="(min-width: 1024px) 560px, 100vw"
+                    className="object-cover object-top"
+                  />
+                  {/* 하단 캡션이 사진 위에서도 읽히도록 어둡게 깐다. */}
+                  <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[rgba(12,11,15,0.92)] to-transparent px-[22px] pt-16 pb-[22px]">
+                    <p className="text-[15px] font-bold tracking-[-0.01em] text-fg">
+                      {HERO.instructor.name}
+                    </p>
+                    <p className="mt-1 text-[13px] text-fg-dim">{HERO.instructor.role}</p>
+                  </figcaption>
+                </figure>
+              ) : (
+                <div className="flex min-h-[320px] items-end border border-line-700 p-[22px] [aspect-ratio:4/5] [background:repeating-linear-gradient(135deg,#1A181F_0_10px,#15141A_10px_20px)]">
+                  <p className="font-mono text-xs leading-relaxed text-fg-ghost">
+                    [ 이미지 ]
+                    <br />
+                    강의 현장 또는 대표 강사 촬영컷
+                    <br />
+                    권장 1200×1500 · WebP
+                    <br />
+                    .env 의 NEXT_PUBLIC_HERO_IMAGE 로 경로 지정
+                  </p>
+                </div>
+              )}
               <dl className="mt-px grid grid-cols-1 gap-px border border-line-700 bg-line-700 sm:grid-cols-3">
                 {HERO.stats.map((stat) => (
                   <div key={stat.label} className="bg-ink-750 p-4">
